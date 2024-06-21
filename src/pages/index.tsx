@@ -42,6 +42,13 @@ const Home = () => {
     console.table(newUserInputs);
     setUserInputs(newUserInputs);
   };
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      if (userInputs[y][x] === 1) {
+        board[y][x] = 0;
+      }
+    }
+  }
   console.log('userInputs');
   console.table(userInputs);
   return (
