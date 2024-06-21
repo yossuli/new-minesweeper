@@ -7,3 +7,41 @@
   min-height: 100vh;
   padding: 0 0.5rem;
 }
+
+.main {
+  width: 300px;
+  height: 355px;
+  padding: 5px;
+  background-color: #ccc;
+  border: 5px outset #eee;
+}
+
+.head {
+  width: 280px;
+  height: 50px;
+  margin-bottom: 5px;
+  background-color: #ccc;
+  border: #eee inset 5px;
+}
+
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  width: 280px;
+  height: 280px;
+  background-color: #aaa;
+  border: #eee inset 5px;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  border: #444 solid 1px;
+}
+
+.stone {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  border: #eee outset 5px;
+}
