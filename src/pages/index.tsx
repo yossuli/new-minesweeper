@@ -12,6 +12,9 @@ const Home = () => {
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1, -1],
   ];
+  const clickHandler = (x: number, y: number) => {
+    console.log(x, y);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.main}>
@@ -19,7 +22,11 @@ const Home = () => {
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((cell, x) => (
-              <div className={cell !== -1 ? styles.cell : styles.stone} key={`${x}-${y}`} />
+              <div
+                className={cell !== -1 ? styles.cell : styles.stone}
+                onClick={() => clickHandler(x, y)}
+                key={`${x}-${y}`}
+              />
             )),
           )}
         </div>
