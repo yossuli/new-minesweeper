@@ -33,16 +33,19 @@
   border: #eee inset 5px;
 }
 
-.cell {
+.icon {
   width: 30px;
   height: 30px;
-  background: url('~/assets/images/icons.png') no-repeat;
+  background: url('~/assets/images/icons.png') no-repeat content-box;
+  background-size: 280px;
+}
+
+.cell {
+  padding: 4px;
   border: #444 solid 1px;
 }
 
 .stone {
-  width: 30px;
-  height: 30px;
   background-color: #ccc;
   border: #eee outset 5px;
 }

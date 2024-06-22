@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './index.module.css';
 const dirs = [
   [1, 1],
@@ -68,6 +68,18 @@ const Home = () => {
     console.table(newUserInputs);
     setUserInputs(newUserInputs);
   };
+  const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const newUserInputs = structuredClone(userInputs);
+    if (newUserInputs[y][x] === 0) {
+      newUserInputs[y][x] = 2;
+    } else if (newUserInputs[y][x] === 2) {
+      newUserInputs[y][x] = 3;
+    } else if (newUserInputs[y][x] === 3) {
+      newUserInputs[y][x] = 0;
+    }
+    setUserInputs(newUserInputs);
+  };
   const countBomb = (x: number, y: number) => {
     let bombCount = 0;
     for (const [dx, dy] of dirs) {
@@ -95,6 +107,10 @@ const Home = () => {
     for (let x = 0; x < 9; x++) {
       if (userInputs[y][x] === 1 && bombMap[y][x] === 0) {
         openCell(x, y);
+      } else if (userInputs[y][x] === 2) {
+        board[y][x] = 10;
+      } else if (userInputs[y][x] === 3) {
+        board[y][x] = 9;
       }
     }
   }
@@ -110,9 +126,10 @@ const Home = () => {
           {board.map((row, y) =>
             row.map((cell, x) => (
               <div
-                className={cell !== -1 ? styles.cell : styles.stone}
+                className={`${styles.icon} ${cell === -1 || cell === 9 || cell === 10 ? styles.stone : styles.cell}`}
                 onClick={() => clickHandler(x, y)}
-                style={{ backgroundPositionX: `${(cell - 1) * -30}px` }}
+                onContextMenu={(e) => clickRHandler(x, y, e)}
+                style={{ backgroundPositionX: `${(cell - 1) * -20}px` }}
                 key={`${x}-${y}`}
               />
             )),
