@@ -35,17 +35,33 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
   const [bombMap, setBombMap] = useState([
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 0, 1, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  const countBoard = (board: number[][], countNum: number) =>
+    board.flat().filter((cell) => cell === countNum).length;
+  const setBombRandom = (x: number, y: number) => {
+    const newBombMap = structuredClone(bombMap);
+    newBombMap[y][x] = 1;
+    while (countBoard(newBombMap, 1) < 11) {
+      const randomX = Math.floor(Math.random() * 9);
+      const randomY = Math.floor(Math.random() * 9);
+      newBombMap[randomY][randomX] = 1;
+    }
+    newBombMap[y][x] = 0;
+    setBombMap(newBombMap);
+  };
   const clickHandler = (x: number, y: number) => {
+    if (countBoard(userInputs, 1) === 0) {
+      setBombRandom(x, y);
+    }
     const newUserInputs = structuredClone(userInputs);
     newUserInputs[y][x] = 1;
     console.log('newUserInputs');
@@ -84,8 +100,8 @@ const Home = () => {
   }
   console.log('userInputs');
   console.table(userInputs);
-  console.log('board');
-  console.table(board);
+  console.log('bombMap');
+  console.table(bombMap);
   return (
     <div className={styles.container}>
       <div className={styles.main}>
