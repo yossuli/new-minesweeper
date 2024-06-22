@@ -36,6 +36,7 @@
 .cell {
   width: 30px;
   height: 30px;
+  background: url('~/assets/images/icons.png') no-repeat;
   border: #444 solid 1px;
 }
 
