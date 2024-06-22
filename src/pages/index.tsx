@@ -35,7 +35,7 @@ const Home = () => {
     setBombMap(newBombMap);
   };
   const clickHandler = (x: number, y: number) => {
-    if (!isFailed) {
+    if (!isFailed && !isClear(board)) {
       if (countBoard(userInputs, 1) === 0) {
         setBombRandom(x, y);
       }
@@ -49,7 +49,7 @@ const Home = () => {
     }
   };
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isFailed) {
+    if (!isFailed && !isClear(board)) {
       e.preventDefault();
       const newUserInputs = structuredClone(userInputs);
       if (newUserInputs[y][x] === 0) {
