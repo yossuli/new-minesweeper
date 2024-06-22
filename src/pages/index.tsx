@@ -19,6 +19,9 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const countBoard = (board: number[][], countNum: number) =>
     board.flat().filter((cell) => cell === countNum).length;
+  const isFailed = userInputs.some((row, y) =>
+    row.some((input, x) => input === 1 && bombMap[y][x] === 1),
+  );
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
@@ -85,6 +88,9 @@ const Home = () => {
         board[y][x] = 10;
       } else if (userInputs[y][x] === 3) {
         board[y][x] = 9;
+      }
+      if (isFailed && bombMap[y][x] === 1) {
+        board[y][x] = 11;
       }
     }
   }
