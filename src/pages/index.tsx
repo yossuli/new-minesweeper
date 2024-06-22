@@ -35,7 +35,9 @@ const Home = () => {
       setBombRandom(x, y);
     }
     const newUserInputs = structuredClone(userInputs);
-    newUserInputs[y][x] = 1;
+    if (newUserInputs[y][x] === 0) {
+      newUserInputs[y][x] = 1;
+    }
     console.log('newUserInputs');
     console.table(newUserInputs);
     setUserInputs(newUserInputs);
