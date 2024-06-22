@@ -62,10 +62,23 @@ const Home = () => {
     }
     return bombCount;
   };
+  const openCell = (x: number, y: number) => {
+    const bombCount = countBomb(x, y);
+    board[y][x] = bombCount;
+    if (bombCount === 0) {
+      for (const [dx, dy] of dirs) {
+        if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] !== undefined) {
+          if (board[y + dy][x + dx] === -1) {
+            openCell(x + dx, y + dy);
+          }
+        }
+      }
+    }
+  };
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
-      if (userInputs[y][x] === 1) {
-        board[y][x] = countBomb(x, y);
+      if (userInputs[y][x] === 1 && bombMap[y][x] === 0) {
+        openCell(x, y);
       }
     }
   }
