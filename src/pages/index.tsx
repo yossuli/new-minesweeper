@@ -34,28 +34,32 @@ const Home = () => {
     setBombMap(newBombMap);
   };
   const clickHandler = (x: number, y: number) => {
-    if (countBoard(userInputs, 1) === 0) {
-      setBombRandom(x, y);
+    if (!isFailed) {
+      if (countBoard(userInputs, 1) === 0) {
+        setBombRandom(x, y);
+      }
+      const newUserInputs = structuredClone(userInputs);
+      if (newUserInputs[y][x] === 0) {
+        newUserInputs[y][x] = 1;
+      }
+      console.log('newUserInputs');
+      console.table(newUserInputs);
+      setUserInputs(newUserInputs);
     }
-    const newUserInputs = structuredClone(userInputs);
-    if (newUserInputs[y][x] === 0) {
-      newUserInputs[y][x] = 1;
-    }
-    console.log('newUserInputs');
-    console.table(newUserInputs);
-    setUserInputs(newUserInputs);
   };
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const newUserInputs = structuredClone(userInputs);
-    if (newUserInputs[y][x] === 0) {
-      newUserInputs[y][x] = 2;
-    } else if (newUserInputs[y][x] === 2) {
-      newUserInputs[y][x] = 3;
-    } else if (newUserInputs[y][x] === 3) {
-      newUserInputs[y][x] = 0;
+    if (!isFailed) {
+      e.preventDefault();
+      const newUserInputs = structuredClone(userInputs);
+      if (newUserInputs[y][x] === 0) {
+        newUserInputs[y][x] = 2;
+      } else if (newUserInputs[y][x] === 2) {
+        newUserInputs[y][x] = 3;
+      } else if (newUserInputs[y][x] === 3) {
+        newUserInputs[y][x] = 0;
+      }
+      setUserInputs(newUserInputs);
     }
-    setUserInputs(newUserInputs);
   };
   const countBomb = (x: number, y: number) => {
     let bombCount = 0;
