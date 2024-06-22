@@ -123,7 +123,10 @@ const Home = () => {
                 className={`${styles.icon} ${cell === -1 || cell === 9 || cell === 10 ? styles.stone : styles.cell}`}
                 onClick={() => clickHandler(x, y)}
                 onContextMenu={(e) => clickRHandler(x, y, e)}
-                style={{ backgroundPositionX: `${(cell - 1) * -20}px` }}
+                style={{
+                  backgroundPositionX: `${(cell - 1) * -20}px`,
+                  backgroundColor: userInputs[y][x] === 1 && bombMap[y][x] === 1 ? 'red' : '',
+                }}
                 key={`${x}-${y}`}
               />
             )),

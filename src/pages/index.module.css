@@ -45,7 +45,8 @@
 .icon {
   width: 30px;
   height: 30px;
-  background: url('~/assets/images/icons.png') no-repeat content-box;
+  background: url('~/assets/images/icons.png') no-repeat;
+  background-origin: content-box, border-box;
   background-size: 280px;
 }
 
