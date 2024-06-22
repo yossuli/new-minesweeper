@@ -24,6 +24,15 @@
   border: #eee inset 5px;
 }
 
+.reset {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  background: url('~/assets/images/icons.png') no-repeat;
+  background-color: #ccc;
+  border: #eee outset 5px;
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;

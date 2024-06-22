@@ -12,39 +12,11 @@ const dirs = [
 ];
 
 const Home = () => {
-  const board = [
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1],
-  ];
-  const [userInputs, setUserInputs] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
-  const [bombMap, setBombMap] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
+  const normalBoard = (x: number, y: number, fill: number) =>
+    [...Array(y)].map(() => [...Array(x)].map(() => fill));
+  const board = normalBoard(9, 9, -1);
+  const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
+  const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const countBoard = (board: number[][], countNum: number) =>
     board.flat().filter((cell) => cell === countNum).length;
   const setBombRandom = (x: number, y: number) => {
@@ -114,6 +86,10 @@ const Home = () => {
       }
     }
   }
+  const reset = () => {
+    setUserInputs(normalBoard(9, 9, 0));
+    setBombMap(normalBoard(9, 9, 0));
+  };
   console.log('userInputs');
   console.table(userInputs);
   console.log('bombMap');
@@ -121,7 +97,13 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
-        <div className={styles.head} />
+        <div className={styles.head}>
+          <div
+            className={styles.reset}
+            style={{ backgroundPositionX: `${11 * -30}px` }}
+            onClick={reset}
+          />
+        </div>
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((cell, x) => (
