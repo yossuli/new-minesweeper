@@ -22,6 +22,7 @@ const Home = () => {
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
+  const isClear = (board: number[][]) => countBoard(board, -1) === 10;
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
@@ -112,7 +113,9 @@ const Home = () => {
         <div className={styles.head}>
           <div
             className={styles.reset}
-            style={{ backgroundPositionX: `${11 * -30}px` }}
+            style={{
+              backgroundPositionX: `${(11 + (isFailed ? 2 : 0) + (isClear(board) ? 1 : 0)) * -30}px`,
+            }}
             onClick={reset}
           />
         </div>
