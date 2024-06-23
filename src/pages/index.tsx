@@ -22,7 +22,7 @@ const Home = () => {
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
-  const isClear = (board: number[][]) => countBoard(board, -1) === 10;
+  const isClear = () => countBoard(board, -1) === 10;
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
@@ -35,7 +35,7 @@ const Home = () => {
     setBombMap(newBombMap);
   };
   const clickHandler = (x: number, y: number) => {
-    if (!isFailed && !isClear(board)) {
+    if (!isFailed && !isClear()) {
       if (countBoard(userInputs, 1) === 0) {
         setBombRandom(x, y);
       }
@@ -49,8 +49,8 @@ const Home = () => {
     }
   };
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isFailed && !isClear(board)) {
-      e.preventDefault();
+    e.preventDefault();
+    if (!isFailed && !isClear() && (board[y][x] === -1 || userInputs[y][x] >= 2)) {
       const newUserInputs = structuredClone(userInputs);
       if (newUserInputs[y][x] === 0) {
         newUserInputs[y][x] = 2;
@@ -114,7 +114,7 @@ const Home = () => {
           <div
             className={styles.reset}
             style={{
-              backgroundPositionX: `${(11 + (isFailed ? 2 : 0) + (isClear(board) ? 1 : 0)) * -30}px`,
+              backgroundPositionX: `${(11 + (isFailed ? 2 : 0) + (isClear() ? 1 : 0)) * -30}px`,
             }}
             onClick={reset}
           />
