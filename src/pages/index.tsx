@@ -50,7 +50,7 @@ const Home = () => {
   };
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (!isFailed && !isClear() && (board[y][x] === -1 || userInputs[y][x] >= 2)) {
+    if (!isFailed && !isClear() && [-1, 9, 10].includes(board[y][x])) {
       const newUserInputs = structuredClone(userInputs);
       if (newUserInputs[y][x] === 0) {
         newUserInputs[y][x] = 2;
@@ -65,7 +65,7 @@ const Home = () => {
   const countBomb = (x: number, y: number) => {
     let bombCount = 0;
     for (const [dx, dy] of dirs) {
-      if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
+      if (bombMap[y + dy]?.[x + dx] === 1) {
         console.log(y + dy, x + dx);
         bombCount++;
       }
@@ -77,10 +77,8 @@ const Home = () => {
     board[y][x] = bombCount;
     if (bombCount === 0) {
       for (const [dx, dy] of dirs) {
-        if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] !== undefined) {
-          if (board[y + dy][x + dx] === -1) {
-            openCell(x + dx, y + dy);
-          }
+        if (board[y + dy]?.[x + dx] === -1) {
+          openCell(x + dx, y + dy);
         }
       }
     }
@@ -123,7 +121,7 @@ const Home = () => {
           <div
             className={styles.reset}
             style={{
-              backgroundPositionX: `${(11 + (isFailed ? 2 : 0) + (isClear() ? 1 : 0)) * -30}px`,
+              backgroundPositionX: `${(11 + +isFailed * 2 + +isClear()) * -30}px`,
             }}
             onClick={reset}
           />
@@ -133,17 +131,16 @@ const Home = () => {
           {board.map((row, y) =>
             row.map((cell, x) => (
               <div
-                className={`${styles.icon} ${cell === -1 || cell === 9 || cell === 10 ? styles.stone : styles.cell}`}
+                className={`${styles.icon} ${
+                  [-1, 9, 10].includes(cell) ? styles.stone : styles.cell
+                }`}
                 onClick={() => clickHandler(x, y)}
                 onContextMenu={(e) => clickRHandler(x, y, e)}
                 style={{
                   backgroundPositionX: `${(cell - 1) * -20}px`,
-                  backgroundColor:
-                    userInputs[y][x] === 1 && bombMap[y][x] === 1
-                      ? 'red'
-                      : isFailed && userInputs[y][x] === 2 && bombMap[y][x] === 0
-                        ? 'pink'
-                        : '',
+                  backgroundColor: { 111: 'red', 120: 'pink' }[
+                    100 * +isFailed + 10 * userInputs[y][x] + bombMap[y][x]
+                  ],
                 }}
                 key={`${x}-${y}`}
               />
