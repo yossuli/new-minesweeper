@@ -136,7 +136,12 @@ const Home = () => {
                 onContextMenu={(e) => clickRHandler(x, y, e)}
                 style={{
                   backgroundPositionX: `${(cell - 1) * -20}px`,
-                  backgroundColor: userInputs[y][x] === 1 && bombMap[y][x] === 1 ? 'red' : '',
+                  backgroundColor:
+                    userInputs[y][x] === 1 && bombMap[y][x] === 1
+                      ? 'red'
+                      : isFailed && userInputs[y][x] === 2 && bombMap[y][x] === 0
+                        ? 'pink'
+                        : '',
                 }}
                 key={`${x}-${y}`}
               />
