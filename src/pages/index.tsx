@@ -17,16 +17,16 @@ const Home = () => {
   const board = normalBoard(9, 9, -1);
   const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
-  const countBoard = (board: number[][], countNum: number) =>
-    board.flat().filter((cell) => cell === countNum).length;
+  const countBoard = (board: number[][], countNum: number[]) =>
+    board.flat().filter((cell) => countNum.includes(cell)).length;
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
-  const isClear = () => countBoard(board, -1) === 10;
+  const isClear = () => countBoard(board, [-1, 10]) === 10;
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
-    while (countBoard(newBombMap, 1) < 11) {
+    while (countBoard(newBombMap, [1]) < 11) {
       const randomX = Math.floor(Math.random() * 9);
       const randomY = Math.floor(Math.random() * 9);
       newBombMap[randomY][randomX] = 1;
@@ -36,7 +36,7 @@ const Home = () => {
   };
   const clickHandler = (x: number, y: number) => {
     if (!isFailed && !isClear()) {
-      if (countBoard(userInputs, 1) === 0) {
+      if (countBoard(userInputs, [1]) === 0) {
         setBombRandom(x, y);
       }
       const newUserInputs = structuredClone(userInputs);
@@ -99,6 +99,14 @@ const Home = () => {
       }
     }
   }
+  for (let y = 0; y < 9; y++) {
+    for (let x = 0; x < 9; x++) {
+      if (isClear() && bombMap[y][x] === 1) {
+        board[y][x] = 10;
+      }
+    }
+  }
+
   const reset = () => {
     setUserInputs(normalBoard(9, 9, 0));
     setBombMap(normalBoard(9, 9, 0));
