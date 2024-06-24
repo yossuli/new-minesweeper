@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.css';
 const dirs = [
   [1, 1],
@@ -17,51 +17,12 @@ const Home = () => {
   const board = normalBoard(9, 9, -1);
   const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
+  const [timer, setTimer] = useState(0);
   const countBoard = (board: number[][], countNum: number[]) =>
     board.flat().filter((cell) => countNum.includes(cell)).length;
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
-  const isClear = () => countBoard(board, [-1, 10]) === 10;
-  const setBombRandom = (x: number, y: number) => {
-    const newBombMap = structuredClone(bombMap);
-    newBombMap[y][x] = 1;
-    while (countBoard(newBombMap, [1]) < 11) {
-      const randomX = Math.floor(Math.random() * 9);
-      const randomY = Math.floor(Math.random() * 9);
-      newBombMap[randomY][randomX] = 1;
-    }
-    newBombMap[y][x] = 0;
-    setBombMap(newBombMap);
-  };
-  const clickHandler = (x: number, y: number) => {
-    if (!isFailed && !isClear()) {
-      if (countBoard(userInputs, [1]) === 0) {
-        setBombRandom(x, y);
-      }
-      const newUserInputs = structuredClone(userInputs);
-      if (newUserInputs[y][x] === 0) {
-        newUserInputs[y][x] = 1;
-      }
-      console.log('newUserInputs');
-      console.table(newUserInputs);
-      setUserInputs(newUserInputs);
-    }
-  };
-  const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!isFailed && !isClear() && [-1, 9, 10].includes(board[y][x])) {
-      const newUserInputs = structuredClone(userInputs);
-      if (newUserInputs[y][x] === 0) {
-        newUserInputs[y][x] = 2;
-      } else if (newUserInputs[y][x] === 2) {
-        newUserInputs[y][x] = 3;
-      } else if (newUserInputs[y][x] === 3) {
-        newUserInputs[y][x] = 0;
-      }
-      setUserInputs(newUserInputs);
-    }
-  };
   const countBomb = (x: number, y: number) => {
     let bombCount = 0;
     for (const [dx, dy] of dirs) {
@@ -97,17 +58,66 @@ const Home = () => {
       }
     }
   }
+  const isClear = countBoard(board, [-1, 10]) === 10;
   for (let y = 0; y < 9; y++) {
     for (let x = 0; x < 9; x++) {
-      if (isClear() && bombMap[y][x] === 1) {
+      if (isClear && bombMap[y][x] === 1) {
         board[y][x] = 10;
       }
     }
   }
-
+  const isStart = countBoard(userInputs, [1]) !== 0;
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (isStart && !isFailed && !isClear) {
+        setTimer((time) => time + 1);
+      }
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [timer, isStart, isFailed, isClear]);
+  const setBombRandom = (x: number, y: number) => {
+    const newBombMap = structuredClone(bombMap);
+    newBombMap[y][x] = 1;
+    while (countBoard(newBombMap, [1]) < 11) {
+      const randomX = Math.floor(Math.random() * 9);
+      const randomY = Math.floor(Math.random() * 9);
+      newBombMap[randomY][randomX] = 1;
+    }
+    newBombMap[y][x] = 0;
+    setBombMap(newBombMap);
+  };
+  const clickHandler = (x: number, y: number) => {
+    if (!isFailed && !isClear) {
+      if (countBoard(userInputs, [1]) === 0) {
+        setBombRandom(x, y);
+      }
+      const newUserInputs = structuredClone(userInputs);
+      if (newUserInputs[y][x] === 0) {
+        newUserInputs[y][x] = 1;
+      }
+      console.log('newUserInputs');
+      console.table(newUserInputs);
+      setUserInputs(newUserInputs);
+    }
+  };
+  const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!isFailed && !isClear && [-1, 9, 10].includes(board[y][x])) {
+      const newUserInputs = structuredClone(userInputs);
+      if (newUserInputs[y][x] === 0) {
+        newUserInputs[y][x] = 2;
+      } else if (newUserInputs[y][x] === 2) {
+        newUserInputs[y][x] = 3;
+      } else if (newUserInputs[y][x] === 3) {
+        newUserInputs[y][x] = 0;
+      }
+      setUserInputs(newUserInputs);
+    }
+  };
   const reset = () => {
     setUserInputs(normalBoard(9, 9, 0));
     setBombMap(normalBoard(9, 9, 0));
+    setTimer(0);
   };
   console.log('userInputs');
   console.table(userInputs);
@@ -121,11 +131,11 @@ const Home = () => {
           <div
             className={styles.reset}
             style={{
-              backgroundPositionX: `${(11 + +isFailed * 2 + +isClear()) * -30}px`,
+              backgroundPositionX: `${(11 + +isFailed * 2 + +isClear) * -30}px`,
             }}
             onClick={reset}
           />
-          <div className={styles.display}>{0}</div>
+          <div className={styles.display}>{timer}</div>
         </div>
         <div className={styles.board}>
           {board.map((row, y) =>
