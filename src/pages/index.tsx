@@ -14,10 +14,13 @@ const dirs = [
 const Home = () => {
   const normalBoard = (x: number, y: number, fill: number) =>
     [...Array(y)].map(() => [...Array(x)].map(() => fill));
-  const board = normalBoard(9, 9, -1);
   const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [timer, setTimer] = useState(0);
+  const width = userInputs[0].length;
+  const height = userInputs.length;
+  const bombNum = { 9: 10, 16: 40, 30: 99 }[width] ?? 10;
+  const board = normalBoard(width, height, -1);
   const countBoard = (board: number[][], countNum: number[]) =>
     board.flat().filter((cell) => countNum.includes(cell)).length;
   const isFailed = userInputs.some((row, y) =>
@@ -44,8 +47,8 @@ const Home = () => {
       }
     }
   };
-  for (let y = 0; y < 9; y++) {
-    for (let x = 0; x < 9; x++) {
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
       if (userInputs[y][x] === 1 && bombMap[y][x] === 0) {
         openCell(x, y);
       } else if (userInputs[y][x] === 2) {
@@ -58,9 +61,9 @@ const Home = () => {
       }
     }
   }
-  const isClear = countBoard(board, [-1, 10]) === 10;
-  for (let y = 0; y < 9; y++) {
-    for (let x = 0; x < 9; x++) {
+  const isClear = countBoard(board, [-1, 10]) === bombNum;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
       if (isClear && bombMap[y][x] === 1) {
         board[y][x] = 10;
       }
@@ -78,9 +81,9 @@ const Home = () => {
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
-    while (countBoard(newBombMap, [1]) < 11) {
-      const randomX = Math.floor(Math.random() * 9);
-      const randomY = Math.floor(Math.random() * 9);
+    while (countBoard(newBombMap, [1]) <= bombNum) {
+      const randomX = Math.floor(Math.random() * width);
+      const randomY = Math.floor(Math.random() * height);
       newBombMap[randomY][randomX] = 1;
     }
     newBombMap[y][x] = 0;
@@ -125,9 +128,42 @@ const Home = () => {
   console.table(bombMap);
   return (
     <div className={styles.container}>
-      <div className={styles.main}>
+      <div>
+        <button
+          onClick={() => {
+            setUserInputs(normalBoard(9, 9, 0));
+            setBombMap(normalBoard(9, 9, 0));
+            setTimer(0);
+          }}
+        >
+          初級
+        </button>
+        <button
+          onClick={() => {
+            setUserInputs(normalBoard(16, 16, 0));
+            setBombMap(normalBoard(16, 16, 0));
+            setTimer(0);
+          }}
+        >
+          中級
+        </button>
+        <button
+          onClick={() => {
+            setUserInputs(normalBoard(30, 16, 0));
+            setBombMap(normalBoard(30, 16, 0));
+            setTimer(0);
+          }}
+        >
+          上級
+        </button>
+        <button>カスタム</button>
+      </div>
+      <div
+        className={styles.main}
+        style={{ width: `${width * 30 + 30}px`, height: `${height * 30 + 85}px` }}
+      >
         <div className={styles.head}>
-          <div className={styles.display}>{10 - countBoard(userInputs, [2])}</div>
+          <div className={styles.display}>{bombNum - countBoard(userInputs, [2])}</div>
           <div
             className={styles.reset}
             style={{
