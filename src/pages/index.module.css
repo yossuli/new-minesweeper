@@ -17,6 +17,8 @@
 }
 
 .head {
+  display: flex;
+  flex-direction: row;
   width: 280px;
   height: 50px;
   margin-bottom: 5px;
@@ -31,6 +33,13 @@
   background: url('~/assets/images/icons.png') no-repeat;
   background-color: #ccc;
   border: #eee outset 5px;
+}
+
+.display {
+  width: 90px;
+  height: 40px;
+  color: #f00;
+  background-color: #000;
 }
 
 .board {

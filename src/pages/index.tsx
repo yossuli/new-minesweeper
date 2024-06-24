@@ -119,6 +119,7 @@ const Home = () => {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.head}>
+          <div className={styles.display}>{10 - countBoard(userInputs, [2])}</div>
           <div
             className={styles.reset}
             style={{
@@ -126,6 +127,7 @@ const Home = () => {
             }}
             onClick={reset}
           />
+          <div className={styles.display}>{0}</div>
         </div>
         <div className={styles.board}>
           {board.map((row, y) =>
