@@ -93,10 +93,14 @@ const Home = () => {
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
-    while (countBoard(newBombMap, [1]) <= bombNum) {
+    const safeBombNum = Math.min(bombMap.flat().length - 1, bombNum);
+    while (countBoard(newBombMap, [1]) <= safeBombNum) {
       const randomX = Math.floor(Math.random() * width);
       const randomY = Math.floor(Math.random() * height);
       newBombMap[randomY][randomX] = 1;
+    }
+    if (custom !== null) {
+      setCustom({ ...custom, bombNum: safeBombNum });
     }
     newBombMap[y][x] = 0;
     setBombMap(newBombMap);
