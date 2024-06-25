@@ -17,12 +17,24 @@ const Home = () => {
   const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [timer, setTimer] = useState(0);
+  const [custom, setCustom] = useState<{
+    width: number;
+    height: number;
+    bombNum: number;
+  } | null>(null);
   const width = userInputs[0].length;
-  const height = userInputs.length;
-  const bombNum = { 9: 10, 16: 40, 30: 99 }[width] ?? 10;
-  const board = normalBoard(width, height, -1);
   const countBoard = (board: number[][], countNum: number[]) =>
     board.flat().filter((cell) => countNum.includes(cell)).length;
+  const height = userInputs.length;
+  const bombNumCalc = () => {
+    if (custom !== null) return custom.bombNum;
+    if (width === 9) return 10;
+    if (width === 16) return 40;
+    if (width === 30) return 99;
+    return 0;
+  };
+  const bombNum = bombNumCalc();
+  const board = normalBoard(width, height, -1);
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
@@ -133,6 +145,7 @@ const Home = () => {
           onClick={() => {
             setUserInputs(normalBoard(9, 9, 0));
             setBombMap(normalBoard(9, 9, 0));
+            setCustom(null);
             setTimer(0);
           }}
         >
@@ -142,6 +155,7 @@ const Home = () => {
           onClick={() => {
             setUserInputs(normalBoard(16, 16, 0));
             setBombMap(normalBoard(16, 16, 0));
+            setCustom(null);
             setTimer(0);
           }}
         >
@@ -151,13 +165,52 @@ const Home = () => {
           onClick={() => {
             setUserInputs(normalBoard(30, 16, 0));
             setBombMap(normalBoard(30, 16, 0));
+            setCustom(null);
             setTimer(0);
           }}
         >
           上級
         </button>
-        <button>カスタム</button>
+        <button
+          onClick={() => {
+            if (custom === null) {
+              setCustom({ width, height, bombNum });
+            } else {
+              setUserInputs(normalBoard(custom.width, custom.height, 0));
+              setBombMap(normalBoard(custom.width, custom.height, 0));
+              setTimer(0);
+            }
+          }}
+        >
+          カスタム
+        </button>
       </div>
+      {custom !== null && (
+        <div>
+          <label htmlFor="width">width : </label>
+          <input
+            defaultValue={width}
+            type="number"
+            id="width"
+            onChange={(e) => setCustom({ ...custom, width: +e.target.value })}
+          />
+          <label htmlFor="height">height : </label>
+          <input
+            defaultValue={height}
+            type="number"
+            id="height"
+            onChange={(e) => setCustom({ ...custom, height: +e.target.value })}
+          />
+          <label htmlFor="bombNum">bombNum : </label>
+          <input
+            defaultValue={bombNum}
+            value={custom.bombNum}
+            type="number"
+            id="bombNum"
+            onChange={(e) => setCustom({ ...custom, bombNum: +e.target.value })}
+          />
+        </div>
+      )}
       <div
         className={styles.main}
         style={{ width: `${width * 30 + 30}px`, height: `${height * 30 + 85}px` }}

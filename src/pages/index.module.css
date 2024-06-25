@@ -39,6 +39,10 @@
   background-color: #000;
 }
 
+.container input {
+  width: 45px;
+}
+
 .board {
   display: flex;
   flex-wrap: wrap;
