@@ -194,6 +194,7 @@ const Home = () => {
           <label htmlFor="width">width : </label>
           <input
             defaultValue={width}
+            min={1}
             type="number"
             id="width"
             onChange={(e) => setCustom({ ...custom, width: +e.target.value })}
@@ -201,6 +202,7 @@ const Home = () => {
           <label htmlFor="height">height : </label>
           <input
             defaultValue={height}
+            min={1}
             type="number"
             id="height"
             onChange={(e) => setCustom({ ...custom, height: +e.target.value })}
@@ -209,6 +211,7 @@ const Home = () => {
           <input
             defaultValue={bombNum}
             value={custom.bombNum}
+            min={1}
             type="number"
             id="bombNum"
             onChange={(e) => setCustom({ ...custom, bombNum: +e.target.value })}
