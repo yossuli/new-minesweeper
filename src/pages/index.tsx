@@ -90,10 +90,11 @@ const Home = () => {
     }, 1000);
     return () => clearInterval(intervalId);
   }, [timer, isStart, isFailed, isClear]);
+
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
     newBombMap[y][x] = 1;
-    const safeBombNum = Math.min(bombMap.flat().length - 1, bombNum);
+    const safeBombNum = Math.min(bombMap.flat().length - 1, Math.max(0, bombNum));
     while (countBoard(newBombMap, [1]) <= safeBombNum) {
       const randomX = Math.floor(Math.random() * width);
       const randomY = Math.floor(Math.random() * height);
