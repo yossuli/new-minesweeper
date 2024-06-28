@@ -24,13 +24,8 @@ const Home = () => {
 
   const countBoard = (board: number[][], countNum: number[]) =>
     board.flat().filter((cell) => countNum.includes(cell)).length;
-  const bombNumCalc = () => {
-    if (custom !== null) return custom.bombNum;
-    if (width === 9) return 10;
-    if (width === 16) return 40;
-    if (width === 30) return 99;
-    return 0;
-  };
+  const bombNumCalc = () =>
+    custom !== null ? custom.bombNum : { 9: 10, 16: 40, 30: 99 }[width] ?? 0;
 
   const width = userInputs[0].length;
   const height = userInputs.length;
