@@ -76,13 +76,9 @@ const Home = () => {
     }
   }
   const isClear = countBoard(board, [-1, 10]) === bombNum;
-  for (let y = 0; y < height; y++) {
-    for (let x = 0; x < width; x++) {
-      if (isClear && bombMap[y][x] === 1) {
-        board[y][x] = 10;
-      }
-    }
-  }
+  const boardWithFlag = board.map((row, y) =>
+    row.map((cell, x) => (isClear && bombMap[y][x] === 1 ? 10 : cell)),
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -218,7 +214,7 @@ const Home = () => {
           <div className={styles.display}>{timer}</div>
         </div>
         <div className={styles.board}>
-          {board.map((row, y) =>
+          {boardWithFlag.map((row, y) =>
             row.map((cell, x) => (
               <div
                 className={`${styles.icon} ${isIncludesStone(cell) ? styles.stone : styles.cell}`}
