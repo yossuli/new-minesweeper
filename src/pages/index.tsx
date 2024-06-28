@@ -41,16 +41,11 @@ const Home = () => {
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
 
-  const countBomb = (x: number, y: number) => {
-    let bombCount = 0;
-    for (const [dx, dy] of dirs) {
-      if (bombMap[y + dy]?.[x + dx] === 1) {
-        console.log(y + dy, x + dx);
-        bombCount++;
-      }
-    }
-    return bombCount;
-  };
+  const countBomb = (x: number, y: number) =>
+    bombMap
+      .slice(Math.max(0, y - 1), Math.min(y + 2, height))
+      .flatMap((row) => row.slice(Math.max(0, x - 1), Math.min(x + 2, width)))
+      .filter((cell) => cell === 1).length;
 
   const openCell = (x: number, y: number) => {
     const bombCount = countBomb(x, y);
