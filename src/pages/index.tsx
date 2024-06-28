@@ -14,18 +14,16 @@ const dirs = [
 const Home = () => {
   const normalBoard = (x: number, y: number, fill: number) =>
     [...Array(y)].map(() => [...Array(x)].map(() => fill));
+
+  const customFields = ['width', 'height', 'bombNum'] as const;
+  type CustomFields = (typeof customFields)[number];
   const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [timer, setTimer] = useState(0);
-  const [custom, setCustom] = useState<{
-    width: number;
-    height: number;
-    bombNum: number;
-  } | null>(null);
-  const width = userInputs[0].length;
+  const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
+
   const countBoard = (board: number[][], countNum: number[]) =>
     board.flat().filter((cell) => countNum.includes(cell)).length;
-  const height = userInputs.length;
   const bombNumCalc = () => {
     if (custom !== null) return custom.bombNum;
     if (width === 9) return 10;
@@ -33,11 +31,16 @@ const Home = () => {
     if (width === 30) return 99;
     return 0;
   };
+
+  const width = userInputs[0].length;
+  const height = userInputs.length;
   const bombNum = bombNumCalc();
   const board = normalBoard(width, height, -1);
+  const isStart = countBoard(userInputs, [1]) !== 0;
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
+
   const countBomb = (x: number, y: number) => {
     let bombCount = 0;
     for (const [dx, dy] of dirs) {
@@ -48,6 +51,7 @@ const Home = () => {
     }
     return bombCount;
   };
+
   const openCell = (x: number, y: number) => {
     const bombCount = countBomb(x, y);
     board[y][x] = bombCount;
@@ -59,6 +63,7 @@ const Home = () => {
       }
     }
   };
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (userInputs[y][x] === 1 && bombMap[y][x] === 0) {
@@ -81,7 +86,7 @@ const Home = () => {
       }
     }
   }
-  const isStart = countBoard(userInputs, [1]) !== 0;
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (isStart && !isFailed && !isClear) {
@@ -106,6 +111,7 @@ const Home = () => {
     newBombMap[y][x] = 0;
     setBombMap(newBombMap);
   };
+
   const clickHandler = (x: number, y: number) => {
     if (!isFailed && !isClear) {
       if (countBoard(userInputs, [1]) === 0) {
@@ -120,6 +126,7 @@ const Home = () => {
       setUserInputs(newUserInputs);
     }
   };
+
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!isFailed && !isClear && [-1, 9, 10].includes(board[y][x])) {
@@ -134,11 +141,45 @@ const Home = () => {
       setUserInputs(newUserInputs);
     }
   };
+
   const reset = () => {
     setUserInputs(normalBoard(9, 9, 0));
     setBombMap(normalBoard(9, 9, 0));
     setTimer(0);
   };
+
+  const customSelect = () => {
+    if (custom === null) {
+      setCustom({ width, height, bombNum });
+    } else {
+      setUserInputs(normalBoard(custom.width, custom.height, 0));
+      setBombMap(normalBoard(custom.width, custom.height, 0));
+      setTimer(0);
+    }
+  };
+
+  type LevelData = {
+    width: number;
+    height: number;
+    bombNum: number;
+  };
+  const levelsData: { level: string; data: LevelData }[] = [
+    { level: '初級', data: { width: 9, height: 9, bombNum: 10 } },
+    { level: '中級', data: { width: 16, height: 16, bombNum: 10 } },
+    { level: '上級', data: { width: 30, height: 16, bombNum: 10 } },
+  ];
+  const levelSelect = (data: LevelData) => {
+    setUserInputs(normalBoard(data.width, data.height, 0));
+    setBombMap(normalBoard(data.width, data.height, 0));
+    setCustom(null);
+    setTimer(0);
+  };
+  const defaultValues: Record<CustomFields, number> = {
+    width,
+    height,
+    bombNum,
+  };
+
   console.log('userInputs');
   console.table(userInputs);
   console.log('bombMap');
@@ -146,77 +187,28 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div>
-        <button
-          onClick={() => {
-            setUserInputs(normalBoard(9, 9, 0));
-            setBombMap(normalBoard(9, 9, 0));
-            setCustom(null);
-            setTimer(0);
-          }}
-        >
-          初級
-        </button>
-        <button
-          onClick={() => {
-            setUserInputs(normalBoard(16, 16, 0));
-            setBombMap(normalBoard(16, 16, 0));
-            setCustom(null);
-            setTimer(0);
-          }}
-        >
-          中級
-        </button>
-        <button
-          onClick={() => {
-            setUserInputs(normalBoard(30, 16, 0));
-            setBombMap(normalBoard(30, 16, 0));
-            setCustom(null);
-            setTimer(0);
-          }}
-        >
-          上級
-        </button>
-        <button
-          onClick={() => {
-            if (custom === null) {
-              setCustom({ width, height, bombNum });
-            } else {
-              setUserInputs(normalBoard(custom.width, custom.height, 0));
-              setBombMap(normalBoard(custom.width, custom.height, 0));
-              setTimer(0);
-            }
-          }}
-        >
-          カスタム
-        </button>
+        {levelsData.map((levelData) => (
+          <button onClick={() => levelSelect(levelData.data)} key={levelData.level}>
+            {levelData.level}
+          </button>
+        ))}
+        <button onClick={customSelect}>カスタム</button>
       </div>
       {custom !== null && (
         <div>
-          <label htmlFor="width">width : </label>
-          <input
-            defaultValue={width}
-            min={1}
-            type="number"
-            id="width"
-            onChange={(e) => setCustom({ ...custom, width: +e.target.value })}
-          />
-          <label htmlFor="height">height : </label>
-          <input
-            defaultValue={height}
-            min={1}
-            type="number"
-            id="height"
-            onChange={(e) => setCustom({ ...custom, height: +e.target.value })}
-          />
-          <label htmlFor="bombNum">bombNum : </label>
-          <input
-            defaultValue={bombNum}
-            value={custom.bombNum}
-            min={1}
-            type="number"
-            id="bombNum"
-            onChange={(e) => setCustom({ ...custom, bombNum: +e.target.value })}
-          />
+          {customFields.map((customField) => (
+            <>
+              <label htmlFor={customField}>{customField} : </label>
+              <input
+                type="number"
+                name={customField}
+                id={customField}
+                min={1}
+                defaultValue={defaultValues[customField]}
+                onChange={(e) => setCustom({ ...custom, [customField]: +e.target.value })}
+              />
+            </>
+          ))}
         </div>
       )}
       <div
