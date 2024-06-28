@@ -41,6 +41,8 @@ const Home = () => {
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
 
+  const isIncludesStone = (cell: number) => [-1, 9, 10].includes(cell);
+
   const countBomb = (x: number, y: number) =>
     bombMap
       .slice(Math.max(0, y - 1), Math.min(y + 2, height))
@@ -52,7 +54,7 @@ const Home = () => {
     board[y][x] = bombCount;
     if (bombCount === 0) {
       for (const [dx, dy] of dirs) {
-        if (board[y + dy]?.[x + dx] === -1) {
+        if (isIncludesStone(board[y + dy]?.[x + dx])) {
           openCell(x + dx, y + dy);
         }
       }
@@ -124,7 +126,7 @@ const Home = () => {
 
   const clickRHandler = (x: number, y: number, e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    if (!isFailed && !isClear && [-1, 9, 10].includes(board[y][x])) {
+    if (!isFailed && !isClear && isIncludesStone(board[y][x])) {
       const newUserInputs = structuredClone(userInputs);
       newUserInputs[y][x] = ({ 0: 2, 1: 1, 2: 3, 3: 0 } as const)[newUserInputs[y][x]];
       setUserInputs(newUserInputs);
@@ -219,9 +221,7 @@ const Home = () => {
           {board.map((row, y) =>
             row.map((cell, x) => (
               <div
-                className={`${styles.icon} ${
-                  [-1, 9, 10].includes(cell) ? styles.stone : styles.cell
-                }`}
+                className={`${styles.icon} ${isIncludesStone(cell) ? styles.stone : styles.cell}`}
                 onClick={() => clickHandler(x, y)}
                 onContextMenu={(e) => clickRHandler(x, y, e)}
                 style={{
