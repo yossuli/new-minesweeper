@@ -12,12 +12,12 @@ const dirs = [
 ];
 
 const Home = () => {
-  const normalBoard = (x: number, y: number, fill: number) =>
+  const normalBoard = <T,>(x: number, y: number, fill: T) =>
     [...Array(y)].map(() => [...Array(x)].map(() => fill));
 
   const customFields = ['width', 'height', 'bombNum'] as const;
   type CustomFields = (typeof customFields)[number];
-  const [userInputs, setUserInputs] = useState(normalBoard(9, 9, 0));
+  const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [timer, setTimer] = useState(0);
   const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
@@ -131,13 +131,7 @@ const Home = () => {
     e.preventDefault();
     if (!isFailed && !isClear && [-1, 9, 10].includes(board[y][x])) {
       const newUserInputs = structuredClone(userInputs);
-      if (newUserInputs[y][x] === 0) {
-        newUserInputs[y][x] = 2;
-      } else if (newUserInputs[y][x] === 2) {
-        newUserInputs[y][x] = 3;
-      } else if (newUserInputs[y][x] === 3) {
-        newUserInputs[y][x] = 0;
-      }
+      newUserInputs[y][x] = ({ 0: 2, 1: 1, 2: 3, 3: 0 } as const)[newUserInputs[y][x]];
       setUserInputs(newUserInputs);
     }
   };
