@@ -109,8 +109,6 @@ const Home = () => {
       if (newUserInputs[y][x] === 0) {
         newUserInputs[y][x] = 1;
       }
-      console.log('newUserInputs');
-      console.table(newUserInputs);
       setUserInputs(newUserInputs);
     }
   };
@@ -162,10 +160,6 @@ const Home = () => {
     bombNum,
   };
 
-  console.log('userInputs');
-  console.table(userInputs);
-  console.log('bombMap');
-  console.table(bombMap);
   return (
     <div className={styles.container}>
       <div>
