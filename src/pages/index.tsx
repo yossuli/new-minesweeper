@@ -125,8 +125,8 @@ const Home = () => {
   };
 
   const reset = () => {
-    setUserInputs(normalBoard(9, 9, 0));
-    setBombMap(normalBoard(9, 9, 0));
+    setUserInputs(normalBoard(width, height, 0));
+    setBombMap(normalBoard(width, height, 0));
     setTimer(0);
   };
 

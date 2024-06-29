@@ -32,6 +32,10 @@
   border: #eee outset 5px;
 }
 
+.reset:active {
+  border: #ccc inset 5px;
+}
+
 .display {
   width: 90px;
   height: 40px;
