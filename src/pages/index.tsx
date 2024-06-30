@@ -62,11 +62,17 @@ const Home = () => {
         openCell(x, y);
       } else if (userInputs[y][x] === 2) {
         board[y][x] = 10;
+        if (isFailed && bombMap[y][x] === 0) {
+          board[y][x] = 210;
+        }
       } else if (userInputs[y][x] === 3) {
         board[y][x] = 9;
       }
       if (isFailed && bombMap[y][x] === 1) {
         board[y][x] = 11;
+        if (userInputs[y][x] === 1) {
+          board[y][x] = 111;
+        }
       }
     }
   }
@@ -202,10 +208,8 @@ const Home = () => {
                 onClick={() => clickHandler(x, y)}
                 onContextMenu={(e) => clickRHandler(x, y, e)}
                 style={{
-                  backgroundPositionX: `${(cell - 1) * -20}px`,
-                  backgroundColor: { 111: 'red', 120: 'pink' }[
-                    100 * +isFailed + 10 * userInputs[y][x] + bombMap[y][x]
-                  ],
+                  backgroundPositionX: `${((cell % 100) - 1) * -20}px`,
+                  backgroundColor: { 1: 'red', 2: 'pink' }[Math.floor(cell / 100)],
                 }}
                 key={`${x}-${y}`}
               />
