@@ -3,6 +3,7 @@ import styles from './index.module.css';
 import { useGame } from '../hooks/useGame';
 import { Cell } from '../components/Cell';
 import { Reset } from '../components/Reset';
+import { Levels } from '../components/Levels';
 
 const Home = () => {
   const {
@@ -26,14 +27,7 @@ const Home = () => {
   } = useGame();
   return (
     <div className={styles.container}>
-      <div>
-        {levelsData.map((levelData) => (
-          <button onClick={() => levelSelect(levelData.data)} key={levelData.level}>
-            {levelData.level}
-          </button>
-        ))}
-        <button onClick={customSelect}>カスタム</button>
-      </div>
+      <Levels levelsData={levelsData} levelSelect={levelSelect} customSelect={customSelect} />
       {custom !== null && (
         <div>
           {customFields.map((customField) => (
