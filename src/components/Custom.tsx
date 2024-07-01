@@ -1,4 +1,4 @@
-import { customFields } from '../types';
+import { customFields } from '../constants';
 import { type CustomFields } from '../types';
 
 type props = {

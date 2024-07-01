@@ -7,6 +7,7 @@ import { Levels } from '../components/Levels';
 import { Custom } from '../components/Custom';
 import { Main } from '../components/Main';
 import { Timer } from '../hooks/Timer';
+import { levelsData } from '../constants';
 
 const Home = () => {
   const {
@@ -16,7 +17,6 @@ const Home = () => {
     reset,
     clickHandler,
     clickRHandler,
-    levelsData,
     defaultValues,
     width,
     height,

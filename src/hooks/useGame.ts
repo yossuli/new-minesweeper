@@ -2,19 +2,9 @@ import type React from 'react';
 import { useState } from 'react';
 import { isIncludesStone } from '../utils/isIncludesStone';
 import type { CustomFields, LevelData } from '../types';
-import { customFields } from '../types';
 import { countBoard } from '../utils/countBoard';
 import { normalBoard } from '../utils/normalBoard';
-const dirs = [
-  [1, 1],
-  [1, 0],
-  [1, -1],
-  [0, -1],
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, 1],
-];
+import { dirs } from '../constants';
 
 export const useGame = () => {
   const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(normalBoard(9, 9, 0));
@@ -130,18 +120,13 @@ export const useGame = () => {
     }
   };
 
-  const levelsData: { level: string; data: LevelData }[] = [
-    { level: '初級', data: { width: 9, height: 9 } },
-    { level: '中級', data: { width: 16, height: 16 } },
-    { level: '上級', data: { width: 30, height: 16 } },
-  ];
   const levelSelect = (data: LevelData) => {
     setUserInputs(normalBoard(data.width, data.height, 0));
     setBombMap(normalBoard(data.width, data.height, 0));
     setCustom(null);
   };
-  const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
 
+  const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
   const displayBombNum = bombNum - countBoard(userInputs, [2]);
   return {
     levelSelect,
@@ -151,8 +136,6 @@ export const useGame = () => {
     isIncludesStone,
     clickHandler,
     clickRHandler,
-    levelsData,
-    customFields,
     defaultValues,
     width,
     height,
