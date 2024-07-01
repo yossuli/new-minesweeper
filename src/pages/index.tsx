@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.css';
 import { useGame } from '../hooks/useGame';
-import { isIncludesStone } from '../utils/isIncludesStone';
+import { Cell } from '../components/Cell';
 
 const Home = () => {
   const {
@@ -68,14 +68,10 @@ const Home = () => {
         <div className={styles.board}>
           {boardWithFlag.map((row, y) =>
             row.map((cell, x) => (
-              <div
-                className={`${styles.icon} ${isIncludesStone(cell) ? styles.stone : styles.cell}`}
+              <Cell
+                cell={cell}
                 onClick={() => clickHandler(x, y)}
                 onContextMenu={(e) => clickRHandler(x, y, e)}
-                style={{
-                  backgroundPositionX: `${((cell % 100) - 1) * -20}px`,
-                  backgroundColor: { 1: 'red', 2: 'pink' }[Math.floor(cell / 100)],
-                }}
                 key={`${x}-${y}`}
               />
             )),
