@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './index.module.css';
 import { useGame } from '../hooks/useGame';
+import { isIncludesStone } from '../utils/isIncludesStone';
 
 const Home = () => {
   const {
@@ -8,7 +9,6 @@ const Home = () => {
     customSelect,
     setCustom,
     reset,
-    isIncludesStone,
     clickHandler,
     clickRHandler,
     levelsData,

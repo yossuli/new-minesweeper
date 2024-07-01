@@ -1,5 +1,6 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { isIncludesStone } from '../utils/isIncludesStone';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -35,8 +36,6 @@ export const useGame = () => {
   const isFailed = userInputs.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1),
   );
-
-  const isIncludesStone = (cell: number) => [-1, 9, 10].includes(cell);
 
   const countBomb = (x: number, y: number) =>
     bombMap
