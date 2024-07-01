@@ -5,6 +5,7 @@ import { Cell } from '../components/Cell';
 import { Reset } from '../components/Reset';
 import { Levels } from '../components/Levels';
 import { Custom } from '../components/Custom';
+import { Main } from '../components/Main';
 
 const Home = () => {
   const {
@@ -29,10 +30,7 @@ const Home = () => {
     <div className={styles.container}>
       <Levels levelsData={levelsData} levelSelect={levelSelect} customSelect={customSelect} />
       <Custom custom={custom} setCustom={setCustom} defaultValues={defaultValues} />
-      <div
-        className={styles.main}
-        style={{ width: `${width * 30 + 30}px`, height: `${height * 30 + 85}px` }}
-      >
+      <Main width={width} height={height}>
         <div className={styles.head}>
           <div className={styles.display}>{displayBombNum}</div>
           <Reset isFailed={isFailed} isClear={isClear} reset={reset} />
@@ -50,7 +48,7 @@ const Home = () => {
             )),
           )}
         </div>
-      </div>
+      </Main>
     </div>
   );
 };
