@@ -158,6 +158,8 @@ const Home = () => {
   };
   const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
 
+  const displayBombNum = bombNum - countBoard(userInputs, [2]);
+
   return (
     <div className={styles.container}>
       <div>
@@ -190,7 +192,7 @@ const Home = () => {
         style={{ width: `${width * 30 + 30}px`, height: `${height * 30 + 85}px` }}
       >
         <div className={styles.head}>
-          <div className={styles.display}>{bombNum - countBoard(userInputs, [2])}</div>
+          <div className={styles.display}>{displayBombNum}</div>
           <div
             className={styles.reset}
             style={{
