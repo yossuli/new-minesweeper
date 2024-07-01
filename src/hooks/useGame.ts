@@ -4,6 +4,7 @@ import { isIncludesStone } from '../utils/isIncludesStone';
 import type { CustomFields, LevelData } from '../types';
 import { customFields } from '../types';
 import { countBoard } from '../utils/countBoard';
+import { normalBoard } from '../utils/normalBoard';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -16,9 +17,6 @@ const dirs = [
 ];
 
 export const useGame = () => {
-  const normalBoard = <T>(x: number, y: number, fill: T) =>
-    [...Array(y)].map(() => [...Array(x)].map(() => fill));
-
   const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
