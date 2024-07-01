@@ -11,12 +11,9 @@ export const useGame = () => {
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
 
-  const bombNumCalc = () =>
-    custom !== null ? custom.bombNum : { 9: 10, 16: 40, 30: 99 }[width] ?? 0;
-
   const width = userInputs[0].length;
   const height = userInputs.length;
-  const bombNum = bombNumCalc();
+  const bombNum = custom !== null ? custom.bombNum : { 9: 10, 16: 40, 30: 99 }[width] ?? 0;
   const board = normalBoard(width, height, -1);
   const isStart = countBoard(userInputs, [1]) !== 0;
   const isFailed = userInputs.some((row, y) =>
@@ -28,6 +25,22 @@ export const useGame = () => {
       .slice(Math.max(0, y - 1), Math.min(y + 2, height))
       .flatMap((row) => row.slice(Math.max(0, x - 1), Math.min(x + 2, width)))
       .filter((cell) => cell === 1).length;
+
+  const setBombRandom = (x: number, y: number) => {
+    const newBombMap = structuredClone(bombMap);
+    newBombMap[y][x] = 1;
+    const safeBombNum = Math.min(bombMap.flat().length - 1, Math.max(0, bombNum));
+    while (countBoard(newBombMap, [1]) <= safeBombNum) {
+      const randomX = Math.floor(Math.random() * width);
+      const randomY = Math.floor(Math.random() * height);
+      newBombMap[randomY][randomX] = 1;
+    }
+    if (custom !== null) {
+      setCustom({ ...custom, bombNum: safeBombNum });
+    }
+    newBombMap[y][x] = 0;
+    setBombMap(newBombMap);
+  };
 
   const openCell = (x: number, y: number) => {
     const bombCount = countBomb(x, y);
@@ -63,26 +76,6 @@ export const useGame = () => {
   }
 
   const isClear = countBoard(board, [-1, 10]) === bombNum;
-
-  const boardWithFlag = board.map((row, y) =>
-    row.map((cell, x) => (isClear && bombMap[y][x] === 1 ? 10 : cell)),
-  );
-
-  const setBombRandom = (x: number, y: number) => {
-    const newBombMap = structuredClone(bombMap);
-    newBombMap[y][x] = 1;
-    const safeBombNum = Math.min(bombMap.flat().length - 1, Math.max(0, bombNum));
-    while (countBoard(newBombMap, [1]) <= safeBombNum) {
-      const randomX = Math.floor(Math.random() * width);
-      const randomY = Math.floor(Math.random() * height);
-      newBombMap[randomY][randomX] = 1;
-    }
-    if (custom !== null) {
-      setCustom({ ...custom, bombNum: safeBombNum });
-    }
-    newBombMap[y][x] = 0;
-    setBombMap(newBombMap);
-  };
 
   const clickHandler = (x: number, y: number) => {
     if (!isFailed && !isClear) {
@@ -126,6 +119,9 @@ export const useGame = () => {
     setCustom(null);
   };
 
+  const boardWithFlag = board.map((row, y) =>
+    row.map((cell, x) => (isClear && bombMap[y][x] === 1 ? 10 : cell)),
+  );
   const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
   const displayBombNum = bombNum - countBoard(userInputs, [2]);
   return {
