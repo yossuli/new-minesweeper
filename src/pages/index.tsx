@@ -6,6 +6,7 @@ import { Reset } from '../components/Reset';
 import { Levels } from '../components/Levels';
 import { Custom } from '../components/Custom';
 import { Main } from '../components/Main';
+import { useTimer } from '../hooks/useTimer';
 
 const Home = () => {
   const {
@@ -23,9 +24,10 @@ const Home = () => {
     boardWithFlag,
     isClear,
     isFailed,
-    timer,
+    isStart,
     custom,
   } = useGame();
+  const { timer } = useTimer({ isStart, isFailed, isClear });
   return (
     <div className={styles.container}>
       <Levels levelsData={levelsData} levelSelect={levelSelect} customSelect={customSelect} />

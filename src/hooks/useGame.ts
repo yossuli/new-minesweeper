@@ -1,8 +1,9 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { isIncludesStone } from '../utils/isIncludesStone';
 import type { CustomFields, LevelData } from '../types';
 import { customFields } from '../types';
+import { useTimer } from './useTimer';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -20,7 +21,6 @@ export const useGame = () => {
 
   const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
-  const [timer, setTimer] = useState(0);
   const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
 
   const countBoard = (board: number[][], countNum: number[]) =>
@@ -78,18 +78,11 @@ export const useGame = () => {
 
   const isClear = countBoard(board, [-1, 10]) === bombNum;
 
+  const { resetTimer } = useTimer({ isStart, isFailed, isClear });
+
   const boardWithFlag = board.map((row, y) =>
     row.map((cell, x) => (isClear && bombMap[y][x] === 1 ? 10 : cell)),
   );
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (isStart && !isFailed && !isClear) {
-        setTimer((time) => time + 1);
-      }
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, [timer, isStart, isFailed, isClear]);
 
   const setBombRandom = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
@@ -132,7 +125,7 @@ export const useGame = () => {
   const reset = () => {
     setUserInputs(normalBoard(width, height, 0));
     setBombMap(normalBoard(width, height, 0));
-    setTimer(0);
+    resetTimer();
   };
 
   const customSelect = () => {
@@ -141,7 +134,7 @@ export const useGame = () => {
     } else {
       setUserInputs(normalBoard(custom.width, custom.height, 0));
       setBombMap(normalBoard(custom.width, custom.height, 0));
-      setTimer(0);
+      resetTimer();
     }
   };
 
@@ -154,7 +147,7 @@ export const useGame = () => {
     setUserInputs(normalBoard(data.width, data.height, 0));
     setBombMap(normalBoard(data.width, data.height, 0));
     setCustom(null);
-    setTimer(0);
+    resetTimer();
   };
   const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
 
@@ -176,7 +169,7 @@ export const useGame = () => {
     boardWithFlag,
     isClear,
     isFailed,
-    timer,
+    isStart,
     custom,
   };
 };
