@@ -1,6 +1,8 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { isIncludesStone } from '../utils/isIncludesStone';
+import type { CustomFields, LevelData } from '../types';
+import { customFields } from '../types';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -16,8 +18,6 @@ export const useGame = () => {
   const normalBoard = <T>(x: number, y: number, fill: T) =>
     [...Array(y)].map(() => [...Array(x)].map(() => fill));
 
-  const customFields = ['width', 'height', 'bombNum'] as const;
-  type CustomFields = (typeof customFields)[number];
   const [userInputs, setUserInputs] = useState<(0 | 1 | 2 | 3)[][]>(normalBoard(9, 9, 0));
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [timer, setTimer] = useState(0);
@@ -145,7 +145,6 @@ export const useGame = () => {
     }
   };
 
-  type LevelData = { width: number; height: number };
   const levelsData: { level: string; data: LevelData }[] = [
     { level: '初級', data: { width: 9, height: 9 } },
     { level: '中級', data: { width: 16, height: 16 } },

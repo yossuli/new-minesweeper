@@ -4,6 +4,7 @@ import { useGame } from '../hooks/useGame';
 import { Cell } from '../components/Cell';
 import { Reset } from '../components/Reset';
 import { Levels } from '../components/Levels';
+import { Custom } from '../components/Custom';
 
 const Home = () => {
   const {
@@ -14,7 +15,6 @@ const Home = () => {
     clickHandler,
     clickRHandler,
     levelsData,
-    customFields,
     defaultValues,
     width,
     height,
@@ -28,23 +28,7 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <Levels levelsData={levelsData} levelSelect={levelSelect} customSelect={customSelect} />
-      {custom !== null && (
-        <div>
-          {customFields.map((customField) => (
-            <>
-              <label htmlFor={customField}>{customField} : </label>
-              <input
-                type="number"
-                name={customField}
-                id={customField}
-                min={1}
-                defaultValue={defaultValues[customField]}
-                onChange={(e) => setCustom({ ...custom, [customField]: +e.target.value })}
-              />
-            </>
-          ))}
-        </div>
-      )}
+      <Custom custom={custom} setCustom={setCustom} defaultValues={defaultValues} />
       <div
         className={styles.main}
         style={{ width: `${width * 30 + 30}px`, height: `${height * 30 + 85}px` }}
