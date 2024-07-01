@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.module.css';
 import { useGame } from '../hooks/useGame';
 import { Cell } from '../components/Cell';
+import { Reset } from '../components/Reset';
 
 const Home = () => {
   const {
@@ -56,13 +57,7 @@ const Home = () => {
       >
         <div className={styles.head}>
           <div className={styles.display}>{displayBombNum}</div>
-          <div
-            className={styles.reset}
-            style={{
-              backgroundPositionX: `${(11 + +isFailed * 2 + +isClear) * -30}px`,
-            }}
-            onClick={reset}
-          />
+          <Reset isFailed={isFailed} isClear={isClear} reset={reset} />
           <div className={styles.display}>{timer}</div>
         </div>
         <div className={styles.board}>
