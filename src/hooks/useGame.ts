@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { isIncludesStone } from '../utils/isIncludesStone';
 import type { CustomFields, LevelData } from '../types';
 import { customFields } from '../types';
+import { countBoard } from '../utils/countBoard';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -22,8 +23,6 @@ export const useGame = () => {
   const [bombMap, setBombMap] = useState(normalBoard(9, 9, 0));
   const [custom, setCustom] = useState<Record<CustomFields, number> | null>(null);
 
-  const countBoard = (board: number[][], countNum: number[]) =>
-    board.flat().filter((cell) => countNum.includes(cell)).length;
   const bombNumCalc = () =>
     custom !== null ? custom.bombNum : { 9: 10, 16: 40, 30: 99 }[width] ?? 0;
 
