@@ -11,6 +11,7 @@ export const Cell = ({ cell, onClick, onContextMenu }: props) => {
   const backgroundPositionX = `${((cell % 100) - 1) * -20}px`;
   const backgroundColor = { 1: 'red', 2: 'pink' }[Math.floor(cell / 100)];
   const className = `${styles.icon} ${isIncludesStone(cell) ? styles.stone : styles.cell}`;
+  console.log(new Date().getTime());
   return (
     <div
       className={className}

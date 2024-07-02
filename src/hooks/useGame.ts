@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { isIncludesStone } from '../utils/isIncludesStone';
 import type { CustomFields, LevelData } from '../types';
 import { customFields } from '../types';
-import { useTimer } from './useTimer';
 const dirs = [
   [1, 1],
   [1, 0],
@@ -78,8 +77,6 @@ export const useGame = () => {
 
   const isClear = countBoard(board, [-1, 10]) === bombNum;
 
-  const { resetTimer } = useTimer({ isStart, isFailed, isClear });
-
   const boardWithFlag = board.map((row, y) =>
     row.map((cell, x) => (isClear && bombMap[y][x] === 1 ? 10 : cell)),
   );
@@ -125,7 +122,6 @@ export const useGame = () => {
   const reset = () => {
     setUserInputs(normalBoard(width, height, 0));
     setBombMap(normalBoard(width, height, 0));
-    resetTimer();
   };
 
   const customSelect = () => {
@@ -134,7 +130,6 @@ export const useGame = () => {
     } else {
       setUserInputs(normalBoard(custom.width, custom.height, 0));
       setBombMap(normalBoard(custom.width, custom.height, 0));
-      resetTimer();
     }
   };
 
@@ -147,7 +142,6 @@ export const useGame = () => {
     setUserInputs(normalBoard(data.width, data.height, 0));
     setBombMap(normalBoard(data.width, data.height, 0));
     setCustom(null);
-    resetTimer();
   };
   const defaultValues: Record<CustomFields, number> = { width, height, bombNum };
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type props = {
   isStart: boolean;
@@ -9,6 +9,9 @@ type props = {
 export const useTimer = ({ isStart, isFailed, isClear }: props) => {
   const [timer, setTimer] = useState(0);
   useEffect(() => {
+    if (!isStart) {
+      setTimer(0);
+    }
     const intervalId = setInterval(() => {
       if (isStart && !isFailed && !isClear) {
         setTimer((time) => time + 1);
@@ -16,6 +19,6 @@ export const useTimer = ({ isStart, isFailed, isClear }: props) => {
     }, 1000);
     return () => clearInterval(intervalId);
   }, [timer, isStart, isFailed, isClear]);
-  const resetTimer = () => setTimer(0);
+  const resetTimer = useCallback(() => setTimer(0), []);
   return { timer, resetTimer };
 };
