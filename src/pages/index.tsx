@@ -8,6 +8,7 @@ import { Custom } from '../components/Custom';
 import { Main } from '../components/Main';
 import { Timer } from '../hooks/Timer';
 import { levelsData } from '../constants';
+import { Display } from '../components/Display';
 
 const Home = () => {
   const {
@@ -33,7 +34,7 @@ const Home = () => {
       <Custom custom={custom} setCustom={setCustom} defaultValues={defaultValues} />
       <Main width={width} height={height}>
         <div className={styles.head}>
-          <div className={styles.display}>{displayBombNum}</div>
+          <Display number={displayBombNum} digits={3} />
           <Reset isFailed={isFailed} isClear={isClear} reset={reset} />
           <Timer isClear={isClear} isFailed={isFailed} isStart={isStart} />
         </div>
